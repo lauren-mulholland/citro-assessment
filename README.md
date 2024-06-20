@@ -75,4 +75,6 @@ There are other ways to connect to the database, e.g., the ClickHouse CLI or a S
 
 - **Database**: I've chosen to use a ClickHouse database for this task. ClickHouse is very fast and is designed for handling large volumes of data, such as financial transaction data. When the ClickHouse container is built, the `transactions` table will be created based on the initialization script `docker-entrypoint-initdb.d/init.sql`. The script will create a table called `"citro_analytics"."transactions"` with the ReplacingMergeTree engine. The ReplacingMergeTree will create or replace records in the table based on the primary key `transactionId`, which is how the POST method endpoints are idempotent.
 
+- **Categories**: I've limited the potential categories as defined in by the Category model (in the models.py module). I've used an AI integration to categorise the transactions based on the counterpart name. In a real-life scenario, more time would be spent on defining the categories. I think it's best to limit the available options for the categories so the AI model is constrained. 
+
 ---
