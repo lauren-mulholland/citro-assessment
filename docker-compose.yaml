@@ -1,0 +1,31 @@
+services:    
+  clickhouse-db:
+    image: clickhouse/clickhouse-server:24.4-alpine
+    container_name: clickhouse
+    hostname: clickhouse
+    ports:
+      - "127.0.0.1:8123:8123"
+      - "127.0.0.1:9000:9000"
+    environment:
+      CLICKHOUSE_DB: ${CLICKHOUSE_DB} 
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER}
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
+    volumes:
+      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+  
+  fast-api:
+    build: .
+    container_name: fastapi-app
+    environment:
+      PORT: 8000
+      CLICKHOUSE_DB: ${CLICKHOUSE_DB}
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
+      CLICKHOUSE_HOST: clickhouse
+      CLICKHOUSE_PORT: 8123
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    ports:
+      - '8000:8000'
+    depends_on:
+      - clickhouse-db
