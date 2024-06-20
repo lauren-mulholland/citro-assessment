@@ -27,10 +27,10 @@ docker-compose up -d --build
 Move onto this section assuming the application was successfully setup and the docker containers are running.
 
 ### The API documentation
-The API is served at http://0.0.0.0:8000 and it is documented and can be tested at http://0.0.0.0:8000/docs. On this page, you can click into each endpoint to view a description, the accepted parameters and the format of the request and response bodies. There are 5 endpoints available which can be used to load and query transactional data. These endpoints are not secured at this point. 
+The API is served at http://0.0.0.0:8000 and it is documented and can be tested at http://0.0.0.0:8000/docs. On this page, you can navigate to each endpoint to display details such as the description, format and example payloads. There are 5 endpoints available which can be used to load and query transactional data. These endpoints are not secured at this point. 
 
 #### Endpoints for Loading Data
-Use the following endpoints to load data either as a single transaction or as a list of transactions. The format of the payloads is documented at the link above.
+Use the following endpoints to load data either as a single transaction or as a list of transactions. The format of the request body is documented at the link above.
 - **POST** /transaction
 - **POST** /transaction_list
 
@@ -60,5 +60,6 @@ There are other ways to connect to the database e.g. the Clickhouse CLI or a SQL
 ## Explanation of Approach
 
 - **API**: I've chosen to use FastAPI to build the endpoints for the application. It is lightweight and allows us to easily document the API. I have not documented the API explicitely in this readme as the descriptions, models and examples can be found by navigating to the docs page.
+
 - **Database**: I've chosen to use a Clickhouse database for this task. Clickhouse is very fast and is designed for handling large volumes of data (presumably such as financial transaction data). When the clickhouse container is built, the transactions table will be created based on the initialisation script `docker-entrypoint-initdb.d/init.sql`. The script will create a table called "citro_analytics"."transactions" with the ReplacingMergeTree engine. The ReplacingMergeTree will create or replace records in the table based on the primary key transactionId, which is how the POST method endpoints are idempotent.
 
